@@ -1,0 +1,48 @@
+- name: Instalar PHP-FPM y extensiones
+  apt:
+    name:
+      - php-fpm
+      - php-mysql
+      - php-mbstring
+      - php-cli
+    state: present
+    update_cache: yes
+
+- name: Configurar PHP-FPM para escuchar en TCP
+  lineinfile:
+    path: /etc/php/8.4/fpm/pool.d/www.conf
+    regexp: '^listen ='
+    line: 'listen = 0.0.0.0:9000'
+  notify: restart php-fpm
+
+- name: Asegurar permisos
+  lineinfile:
+    path: /etc/php/8.4/fpm/pool.d/www.conf
+    regexp: '^listen.allowed_clients'
+    line: 'listen.allowed_clients = 0.0.0.0/0'
+  notify: restart php-fpm
+
+- name: Crear DocumentRoot si no existe
+  ansible.builtin.file:
+    path: "/{{ item.datos.documentroot }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+  loop: "{{ virtualhosts }}"
+
+- name: Copiar aplicación Guestbook
+  ansible.builtin.copy:
+    src: app/
+    dest: "/{{ base_web_path }}/"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Crear fichero config.php
+  ansible.builtin.template:
+    src: config.php.j2
+    dest: "/{{ base_web_path }}/config.php"
+    owner: www-data
+    group: www-data
