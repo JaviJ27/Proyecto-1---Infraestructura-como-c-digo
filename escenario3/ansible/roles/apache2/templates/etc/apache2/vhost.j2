@@ -7,7 +7,11 @@
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
-    </Directory>
+        </Directory>
+
+        <FilesMatch "\.php$">
+            SetHandler "proxy:fcgi://10.0.0.3:9000"
+        </FilesMatch>
 
 	ErrorLog ${APACHE_LOG_DIR}/{{item.datos.errorlog}}.log
 	CustomLog ${APACHE_LOG_DIR}/{{item.datos.accesslog}}.log combined

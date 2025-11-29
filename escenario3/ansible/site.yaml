@@ -12,3 +12,8 @@
   become: true
   roles:
    - role: mariadb
+
+- hosts: servidores_php
+  become: true
+  roles:
+   - role: php
