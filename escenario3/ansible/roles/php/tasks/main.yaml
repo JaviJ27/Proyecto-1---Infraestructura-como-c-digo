@@ -15,13 +15,6 @@
     line: 'listen = 0.0.0.0:9000'
   notify: restart php-fpm
 
-- name: Asegurar permisos
-  lineinfile:
-    path: /etc/php/8.4/fpm/pool.d/www.conf
-    regexp: '^listen.allowed_clients'
-    line: 'listen.allowed_clients = 0.0.0.0/0'
-  notify: restart php-fpm
-
 - name: Crear DocumentRoot si no existe
   ansible.builtin.file:
     path: "/{{ item.datos.documentroot }}"
