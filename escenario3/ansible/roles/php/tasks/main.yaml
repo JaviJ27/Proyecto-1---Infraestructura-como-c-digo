@@ -5,6 +5,7 @@
       - php-mysql
       - php-mbstring
       - php-cli
+      - nfs-common
     state: present
     update_cache: yes
 

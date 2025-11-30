@@ -1,0 +1,8 @@
+- name: restart php-fpm
+  service:
+    name: php8.4-fpm
+    state: restarted
+- name: reload nfs
+  service:
+    name: nfs-kernel-server
+    state: restarted

@@ -6,6 +6,7 @@
       - php-mbstring
       - php-mysql
       - libapache2-mod-fcgid
+      - nfs-common
     state: present
     update_cache: yes
 

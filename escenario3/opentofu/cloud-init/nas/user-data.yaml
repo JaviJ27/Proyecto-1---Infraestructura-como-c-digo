@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────
 # Hostname
 # ──────────────────────────────────────────────────────────────
-hostname: Deb13ProyectoApache
+hostname: Deb13ProyectoNAS
 #fqdn: Deb13plantilla.localdomain
 #manage_etc_hosts: true
 

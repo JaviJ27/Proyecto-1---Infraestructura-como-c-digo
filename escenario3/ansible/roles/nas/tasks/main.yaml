@@ -1,0 +1,69 @@
+- name: Instalar NAS
+  apt:
+    name:
+      - nfs-kernel-server
+      - acl
+    state: present
+    update_cache: yes
+
+- name: Crear DocumentRoot si no existe
+  ansible.builtin.file:
+    path: "/{{ item.datos.documentroot }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+  loop: "{{ virtualhosts }}"
+
+- name: Copiar aplicación Guestbook
+  ansible.builtin.copy:
+    src: app/
+    dest: "/{{ base_web_path }}/"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Crear fichero config.php
+  ansible.builtin.template:
+    src: config.php.j2
+    dest: "/{{ base_web_path }}/config.php"
+    owner: www-data
+    group: www-data
+
+- name: Configurar exports de NFS
+  ansible.builtin.template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reload nfs
+
+- name: Recargar exports de NFS
+  ansible.builtin.command:
+    cmd: exportfs -ar
+
+- name: ACLs para usuarios
+  ansible.posix.acl:
+    path: "/{{ item.0.datos.documentroot }}"
+    entity: "{{ item.1 }}"
+    etype: user
+    permissions: rwX
+    state: present
+  with_nested:
+    - "{{ virtualhosts }}"
+    - [ "www-data", "usuario" ]
+
+- name: ACLs por defecto para usuarios
+  ansible.posix.acl:
+    path: "/{{ item.0.datos.documentroot }}"
+    entity: "{{ item.1 }}"
+    etype: user
+    permissions: rwX
+    default: yes
+    state: present
+  with_nested:
+    - "{{ virtualhosts }}"
+    - [ "www-data", "usuario" ]

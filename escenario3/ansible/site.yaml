@@ -17,3 +17,8 @@
   become: true
   roles:
    - role: php
+
+- hosts: servidores_nas
+  become: true
+  roles:
+   - role: nas
