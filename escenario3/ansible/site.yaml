@@ -3,6 +3,11 @@
   roles:
    - role: commons
 
+- hosts: servidores_nas
+  become: true
+  roles:
+   - role: nas
+
 - hosts: servidores_web
   become: true
   roles:
@@ -17,8 +22,3 @@
   become: true
   roles:
    - role: php
-
-- hosts: servidores_nas
-  become: true
-  roles:
-   - role: nas

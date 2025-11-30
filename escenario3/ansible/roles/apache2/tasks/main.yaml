@@ -50,20 +50,10 @@
   loop: "{{ virtualhosts }}"
   notify: restart apache2
 
-
-- name: Copiar aplicación Guestbook
-  ansible.builtin.copy:
-    src: app/
-    dest: "/{{ base_web_path }}/"
-    owner: www-data
-    group: www-data
-    mode: '0644'
-    directory_mode: '0755'
-
-
-- name: Crear fichero config.php
-  ansible.builtin.template:
-    src: config.php.j2
-    dest: "/{{ base_web_path }}/config.php"
-    owner: www-data
-    group: www-data
+- name: Añadir entrada en fstab y montar NFS
+  ansible.posix.mount:
+    src: "10.0.0.4:/var/www/javier"
+    path: "/var/www/javier"
+    fstype: nfs
+    opts: "rw,_netdev"
+    state: mounted
