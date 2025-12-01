@@ -13,9 +13,9 @@
     owner: www-data
     group: www-data
     mode: '0755'
-  loop: "{{ virtualhosts }}"
+  loop: "{{ virtualhosts1 }}"
 
-- name: Copiar aplicación Guestbook
+- name: Copiar aplicación
   ansible.builtin.copy:
     src: app/
     dest: "/{{ base_web_path }}/"
@@ -53,7 +53,7 @@
     permissions: rwX
     state: present
   with_nested:
-    - "{{ virtualhosts }}"
+    - "{{ virtualhosts1 }}"
     - [ "www-data", "usuario" ]
 
 - name: ACLs por defecto para usuarios
@@ -65,5 +65,5 @@
     default: yes
     state: present
   with_nested:
-    - "{{ virtualhosts }}"
+    - "{{ virtualhosts1 }}"
     - [ "www-data", "usuario" ]

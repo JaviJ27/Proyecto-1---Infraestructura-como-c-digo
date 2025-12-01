@@ -1,13 +1,24 @@
 # Lista con diccionarios para indicar los datos de los virtualhost que se van a crear:
 # apache2
-virtualhosts:
-  - name: javier
+virtualhosts1:
+  - name: www.javier.org
     datos:
       nameserver: www.javier.org 
       documentroot: /var/www/javier
       errorlog: error_javier
       accesslog: acceses_javier
+      ip_php: 10.0.0.3
+      puerto_php: 9000
 
+virtualhosts2:
+  - name: phpmyadmin.javier.org
+    datos:
+      nameserver: phpmyadmin.javier.org 
+      documentroot: /usr/share/phpmyadmin
+      errorlog: error_phpmyadmin
+      accesslog: acceses_phpmuadmin
+      ip_php: 10.0.0.3
+      puerto_php: 9000
 
 # Lista con los módulos que hay que activar
 mods_enabled:
@@ -27,3 +38,7 @@ guestbook_db_host: "mariadb.example.org"
 guestbook_db_user: "guestbook_user"
 guestbook_db_password: "guestbook_pass"
 guestbook_db_name: "guestbook_db"
+blowfish_secret: "rUmej6/KYNRvP/dEgfElqiJyoCa8D8iAd5jcImzpB/c="
+mariadb_host: "10.0.0.2"
+mariadb_user: "admin"
+mariadb_password: "admin"

@@ -9,6 +9,20 @@
     state: present
     update_cache: yes
 
+- name: Instalar phpmyadmin
+  apt:
+    name:
+      - phpmyadmin
+    state: present
+    install_recommends: no
+    update_cache: yes
+
+- name: Configurar base de phpmyadmin
+  lineinfile:
+    path: /etc/phpmyadmin/config.inc.php
+    regexp: '^//.*''localhost'';$'
+    line: "$cfg['Servers'][$i]['host'] = '10.0.0.2';"
+
 - name: Configurar PHP-FPM para escuchar en TCP
   lineinfile:
     path: /etc/php/8.4/fpm/pool.d/www.conf
@@ -23,7 +37,7 @@
     owner: www-data
     group: www-data
     mode: '0755'
-  loop: "{{ virtualhosts }}"
+  loop: "{{ virtualhosts1 }}"
 
 - name: Añadir entrada en fstab y montar NFS
   ansible.posix.mount:

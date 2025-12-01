@@ -1,0 +1,9 @@
+<?php
+$cfg['blowfish_secret'] = '{{ blowfish_secret }}';
+$i = 1;
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['host'] = '{{ mariadb_host }}';
+$cfg['Servers'][$i]['port'] = 3306;
+$cfg['Servers'][$i]['connect_type'] = 'tcp';
+$cfg['Servers'][$i]['user'] = '{{ mariadb_user }}';
+$cfg['Servers'][$i]['password'] = '{{ mariadb_password }}';

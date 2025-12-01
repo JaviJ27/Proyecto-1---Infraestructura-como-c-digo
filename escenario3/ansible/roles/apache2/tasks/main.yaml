@@ -10,6 +10,19 @@
     state: present
     update_cache: yes
 
+- name: Instalar phpmyadmin
+  apt:
+    name:
+      - phpmyadmin
+    state: present
+    install_recommends: no
+    update_cache: yes
+
+- name: Configurar base de phpmyadmin
+  lineinfile:
+    path: /etc/phpmyadmin/config.inc.php
+    regexp: '^//.*''localhost'';$'
+    line: "$cfg['Servers'][$i]['host'] = '10.0.0.2';"
 
 - name: Activar módulos de Apache para PHP-FPM remoto
   community.general.apache2_module:
@@ -21,16 +34,23 @@
     - setenvif
   notify: restart apache2
 
-
-- name: Configuración de virtualhost
+- name: Configuración de virtualhost1
   template: 
-    src: etc/apache2/vhost.j2
+    src: etc/apache2/vhost1.j2
     dest: /etc/apache2/sites-available/{{ item.name }}.conf
     owner: root
     group: root
-  loop: "{{ virtualhosts }}"
+  loop: "{{ virtualhosts1 }}"
   notify: restart apache2
 
+- name: Configuración de virtualhost2
+  template: 
+    src: etc/apache2/vhost2.j2
+    dest: /etc/apache2/sites-available/{{ item.name }}.conf
+    owner: root
+    group: root
+  loop: "{{ virtualhosts2 }}"
+  notify: restart apache2
 
 - name: Crear DocumentRoot si no existe
   ansible.builtin.file:
@@ -39,15 +59,22 @@
     owner: www-data
     group: www-data
     mode: '0755'
-  loop: "{{ virtualhosts }}"
-
+  loop: "{{ virtualhosts1 }}"
 
 - name: Activar VirtualHosts
   file:
     src: /etc/apache2/sites-available/{{ item.name }}.conf
     dest: /etc/apache2/sites-enabled/{{ item.name }}.conf
     state: link
-  loop: "{{ virtualhosts }}"
+  loop: "{{ virtualhosts1 }}"
+  notify: restart apache2
+
+- name: Activar VirtualHosts2
+  file:
+    src: /etc/apache2/sites-available/{{ item.name }}.conf
+    dest: /etc/apache2/sites-enabled/{{ item.name }}.conf
+    state: link
+  loop: "{{ virtualhosts2 }}"
   notify: restart apache2
 
 - name: Añadir entrada en fstab y montar NFS
