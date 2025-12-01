@@ -54,7 +54,7 @@
 
 - name: Crear DocumentRoot si no existe
   ansible.builtin.file:
-    path: "/{{ item.datos.documentroot }}"
+    path: "{{ item.datos.documentroot }}"
     state: directory
     owner: www-data
     group: www-data
